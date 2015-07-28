@@ -111,28 +111,8 @@ class CheckoutPage_Controller extends Page_Controller {
 		'index',
 		'OrderForm'
 	);
-	
-	/**
-	 * Include some CSS and javascript for the checkout page
-	 * 
-	 * TODO why didn't I use init() here?
-	 * 
-	 * @return Array Contents for page rendering
-	 */
-	function index() {
-		
-		//Update stock levels
-		//Order::delete_abandoned();
 
-		Requirements::css('swipestripe/css/Shop.css');
-
-		return array( 
-			 'Content' => $this->Content, 
-			 'Form' => $this->OrderForm()
-		);
-	}
-
-	function OrderForm() {
+	public function OrderForm() {
 
 		$order = Cart::get_current_order();
 		$member = Member::currentUser() ? Member::currentUser() : singleton('Member');
