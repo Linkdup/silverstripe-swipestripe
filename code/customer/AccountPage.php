@@ -110,17 +110,22 @@ class AccountPage_Controller extends Page_Controller {
 	 * @var Array Set of actions
 	 */
 	private static $allowed_actions = array (
-		'index',
-		'order',
-		'repay',
-		'RepayForm'
+		'index' => '->permissionCheck',
+		'order' => '->permissionCheck',
+		'repay' => '->permissionCheck',
+		'RepayForm' => '->permissionCheck',
 	);
 	
-	public function init() {
-		parent::init();
-
-		if(!Permission::check('VIEW_ORDER')) {
-			return $this->redirect(Director::absoluteBaseURL() . 'Security/login?BackURL=' . urlencode($this->getRequest()->getVar('url')));
+	/**
+	 * Validate account permission
+	 * 
+	 * @return boolean
+	 */
+	protected function permissionCheck(){
+		if(Member::currentUser()) {
+			return Permission::check('VIEW_ORDER');
+		} else {
+			return false;
 		}
 	}
 	
