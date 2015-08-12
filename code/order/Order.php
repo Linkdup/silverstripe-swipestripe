@@ -142,7 +142,8 @@ class Order extends DataObject implements PermissionProvider {
 		'Member.Name' => 'Customer',
 		'Member.Email' => 'Email',
 		'SummaryOfTotal' => 'Total',
-		'Status' => 'Status'
+		'Status' => 'Status',
+		'PaymentStatus' => 'Payment'
 	);
 	
 	/**
@@ -167,6 +168,10 @@ class Order extends DataObject implements PermissionProvider {
 		'Status' => array(
 			'title' => 'Status',
 			'filter' => 'ShopSearchFilter_OptionSet'
+		),
+		'PaymentStatus' => array(
+			'title' => 'Payment',
+			'filter' => 'ExactMatchFilter'
 		)
 	);
 	
