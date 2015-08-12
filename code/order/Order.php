@@ -395,6 +395,10 @@ class Order extends DataObject implements PermissionProvider {
 		$fields->push(new TabSet('Root', 
 			Tab::create('Order')
 		));
+		
+		$fields->addFieldsToTab('Root.Order', array(
+			LiteralField::create("PrintInvoice",'<p class="print"><a href="OrderPrint_Controller/index/'. $this->ID . '?print=1" onclick="javascript: window.open(this.href, \'print_order\', \'toolbar=0,scrollbars=1,location=1,statusbar=0,menubar=0,resizable=1,width=800,height=600,left = 50,top = 50\'); return false;">Print Order</a></p>')
+		));
 
 		//Override this in updateOrderCMSFields to change the order template in the CMS
 		$htmlSummary = $this->customise(array(
@@ -915,5 +919,53 @@ class Order_Update extends DataObject {
 
 	public function VisibleSummary() {
 		return ($this->Visible) ? 'True' : '';
+	}
+}
+
+/**
+ * Enables admin users to print order
+ */
+class OrderPrint_Controller extends Controller {
+	
+	/**
+	 * Set allowed actions on controller
+	 * 
+	 * @var array 
+	 */
+	private static $allowed_actions = array(
+		'index' => 'ADMIN'
+	);
+
+	/**
+	 * Initalise controller
+	 */
+	public function init(){
+		parent::init();
+		
+		//include print javascript, if print argument is provided
+		if(isset($_REQUEST['print']) && $_REQUEST['print']) {
+			Requirements::customScript("if(document.location.href.indexOf('print=1') > 0) {window.print();}");
+		}
+		
+		$this->Title = "Invoice";
+	}
+
+	/**
+	 * Print friendly version of order
+	 * 
+	 * @return HTMLText
+	 */
+	public function index() {
+		
+		// Set the stylesheet
+		Requirements::css('swipestripe/css/Shop.css');
+		
+		// Get the order
+		$order = Order::get()->byID((int)$this->request->param("ID"));
+		
+		// Render the response
+		return $this->customise(array(
+			"Order" => $order
+		))->renderWith('OrderPrint');
 	}
 }
