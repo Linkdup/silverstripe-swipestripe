@@ -50,6 +50,7 @@ class ReceiptEmail extends ProcessedEmail {
 				'Message' => $this->Body(),
 				'Order' => $order,
 				'Customer' => $customer,
+				'SiteConfig' => $siteConfig,
 				'InlineCSS' => "<style>$css</style>",
 				'Signature' => $this->signature
 			)

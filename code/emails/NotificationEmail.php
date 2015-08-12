@@ -54,6 +54,7 @@ class NotificationEmail extends ProcessedEmail {
 				'Customer' => $customer,
 				'InlineCSS' => "<style>$css</style>",
 				'Signature' => $this->signature,
+				'SiteConfig' => $siteConfig,
 				'AdminLink' => $adminLink
 			)
 		);
