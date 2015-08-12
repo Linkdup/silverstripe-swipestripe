@@ -161,9 +161,10 @@ class AccountPage_Controller extends Page_Controller {
 		if ($orderID = $request->param('ID')) {
 			
 			$member = Member::currentUser();
-			$order = Order::get()
-				->where("\"Order\".\"ID\" = " . Convert::raw2sql($orderID))
-				->First();
+			$order = Order::get()->filter(array(
+				"ID" => (int)$orderID,
+				"MemberID" => $member->ID
+			))->first();
 
 			if (!$order || !$order->exists()) {
 				return $this->httpError(403, _t('AccountPage.NO_ORDER_EXISTS', 'Order does not exist.'));
