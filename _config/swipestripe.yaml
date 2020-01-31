@@ -27,7 +27,7 @@ LeftAndMain:
     - 'ShopAdmin_LeftAndMainExtension'
 Page_Controller:
   extensions: 
-    - 'Cart'
+    - 'Cart_Extension'
 Member:
   extensions: 
     - 'Customer_Extension'

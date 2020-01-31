@@ -1,32 +1,30 @@
 <?php
 /**
- * Extends {@link Page_Controller} adding some functions to retrieve the current cart, 
+ * Extends {@link Page_Controller} adding some functions to retrieve the current cart,
  * and link to the cart.
- * 
+ *
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage customer
  */
-class Cart extends Extension {
+class Cart_Extension extends Extension {
 
 	/**
 	 * Retrieve the current cart for display in the template.
-	 * 
+	 *
 	 * @return Order The current order (cart)
 	 */
 	function Cart() {
 		$order = self::get_current_order();
 		$order->Items();
 		$order->Total;
-
-		//HTTP::set_cache_age(0);
 		return $order;
 	}
-	
+
 	/**
 	 * Convenience method to return links to cart related page.
-	 * 
+	 *
 	 * @param String $type The type of cart page a link is needed for
 	 * @return String The URL to the particular page
 	 */
@@ -50,21 +48,21 @@ class Cart extends Extension {
 				else break;
 		}
 	}
-	
+
 	/**
 	 * Get the current order from the session, if order does not exist create a new one.
-	 * 
+	 *
 	 * @return Order The current order (cart)
 	 */
 	public static function get_current_order($persist = false) {
 
 		$orderID = Session::get('Cart.OrderID');
 		$order = null;
-		
+
 		if ($orderID) {
 			$order = DataObject::get_by_id('Order', $orderID);
 		}
-		
+
 		if (!$orderID || !$order || !$order->exists()) {
 			$order = new Order();
 
@@ -80,7 +78,7 @@ class Cart extends Extension {
 	}
 
 	/**
-	 * Updates timestamp LastActive on the order, called on every page request. 
+	 * Updates timestamp LastActive on the order, called on every page request.
 	 */
 	function onBeforeInit() {
 
