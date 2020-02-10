@@ -75,7 +75,7 @@ class SWS_CheckoutTest extends SWS_Test {
 			'Quantity' => 1
 		));
 
-		$order = Cart::get_current_order();
+		$order = Cart_Extension::get_current_order();
 		$items = $order->Items();
 		
 		$this->assertEquals(1, $items->Count());
@@ -118,7 +118,7 @@ class SWS_CheckoutTest extends SWS_Test {
 			'Quantity' => 1
 		));
 
-		$order = Cart::get_current_order();
+		$order = Cart_Extension::get_current_order();
 		$items = $order->Items();
 		
 		$this->assertEquals(1, $items->Count());
@@ -170,7 +170,7 @@ class SWS_CheckoutTest extends SWS_Test {
 			'Quantity' => 1
 		));
 
-		$order = Cart::get_current_order();
+		$order = Cart_Extension::get_current_order();
 		$items = $order->Items();
 		
 		$this->assertEquals(1, $items->Count());
@@ -229,7 +229,7 @@ class SWS_CheckoutTest extends SWS_Test {
 			'Options[3]' => $shortsAVariation->getOptionForAttribute(3)->ID, //Cotton
 		));
 
-		$order = Cart::get_current_order();
+		$order = Cart_Extension::get_current_order();
 		$items = $order->Items();
 		
 		$this->assertEquals(1, $items->Count());
@@ -288,7 +288,7 @@ class SWS_CheckoutTest extends SWS_Test {
 			'Options[3]' => $shortsAVariation->getOptionForAttribute(3)->ID, //Cotton
 		));
 
-		$order = Cart::get_current_order();
+		$order = Cart_Extension::get_current_order();
 		$items = $order->Items();
 		
 		$this->assertEquals(1, $items->Count());
@@ -327,7 +327,7 @@ class SWS_CheckoutTest extends SWS_Test {
 		//Log in as buyer again and try to checkout
 		$this->loginAs($this->objFromFixture('Member', 'buyer'));
 		
-		$order = Cart::get_current_order();
+		$order = Cart_Extension::get_current_order();
 		$items = $order->Items();
 		$this->assertEquals(0, $items->Count());
 		
@@ -379,7 +379,7 @@ class SWS_CheckoutTest extends SWS_Test {
 			'Options[3]' => $shortsAVariation->getOptionForAttribute(3)->ID, //Cotton
 		));
 
-		$order = Cart::get_current_order();
+		$order = Cart_Extension::get_current_order();
 		$items = $order->Items();
 		$variation = $order->Items()->First()->Variation();
 		
@@ -435,7 +435,7 @@ class SWS_CheckoutTest extends SWS_Test {
 			'Options[3]' => $shortsAVariation->getOptionForAttribute(3)->ID, //Cotton
 		));
 
-		$order = Cart::get_current_order();
+		$order = Cart_Extension::get_current_order();
 		$items = $order->Items();
 		$variation = $order->Items()->First()->Variation();
 		
@@ -476,7 +476,7 @@ class SWS_CheckoutTest extends SWS_Test {
 			'Quantity' => 1
 		));
 
-		$order = Cart::get_current_order();
+		$order = Cart_Extension::get_current_order();
 		$items = $order->Items();
 		$this->assertEquals(1, $items->Count());
 		

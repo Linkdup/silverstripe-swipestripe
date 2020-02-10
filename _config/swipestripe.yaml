@@ -18,16 +18,16 @@ Security:
 
 Payment:
   extensions: 
-    - 'Payment_Extension'
+    - Payment_Extension
 PaymentProcessor:
   extensions: 
-    - 'Payment_ProcessorExtension'
+    - Payment_ProcessorExtension
 LeftAndMain:
   extensions: 
-    - 'ShopAdmin_LeftAndMainExtension'
+    - ShopAdmin_LeftAndMainExtension
 Page_Controller:
   extensions: 
-    - 'Cart_Extension'
+    - Cart_Extension
 Member:
   extensions: 
-    - 'Customer_Extension'
+    - Customer_Extension

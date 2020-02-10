@@ -3,14 +3,14 @@
  * A checkout page for displaying the checkout form to a visitor.
  * Automatically created on install of the shop module, cannot be deleted by admin user
  * in the CMS. A required page for the shop module.
- * 
+ *
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
  * @subpackage customer
  */
 class CheckoutPage extends Page {
-	
+
 	/**
 	 * Automatically create a CheckoutPage if one is not found
 	 * on the site at the time the database is built (dev/build).
@@ -30,20 +30,20 @@ class CheckoutPage extends Page {
 			DB::alteration_message('Checkout page \'Checkout\' created', 'created');
 		}
 	}
-	
+
 	/**
 	 * Prevent CMS users from creating another checkout page.
-	 * 
+	 *
 	 * @see SiteTree::canCreate()
 	 * @return Boolean Always returns false
 	 */
 	function canCreate($member = null) {
 		return false;
 	}
-	
+
 	/**
 	 * Prevent CMS users from deleting the checkout page.
-	 * 
+	 *
 	 * @see SiteTree::canDelete()
 	 * @return Boolean Always returns false
 	 */
@@ -56,10 +56,10 @@ class CheckoutPage extends Page {
 			parent::delete();
 		}
 	}
-	
+
 	/**
 	 * Prevent CMS users from unpublishing the checkout page.
-	 * 
+	 *
 	 * @see SiteTree::canDeleteFromLive()
 	 * @see CheckoutPage::getCMSActions()
 	 * @return Boolean Always returns false
@@ -67,10 +67,10 @@ class CheckoutPage extends Page {
 	function canDeleteFromLive($member = null) {
 		return false;
 	}
-	
+
 	/**
 	 * To remove the unpublish button from the CMS, as this page must always be published
-	 * 
+	 *
 	 * @see SiteTree::getCMSActions()
 	 * @see CheckoutPage::canDeleteFromLive()
 	 * @return FieldList Actions fieldset with unpublish action removed
@@ -80,10 +80,10 @@ class CheckoutPage extends Page {
 		$actions->removeByName('action_unpublish');
 		return $actions;
 	}
-	
+
 	/**
 	 * Remove page type dropdown to prevent users from changing page type.
-	 * 
+	 *
 	 * @see Page::getCMSFields()
 	 * @return FieldList
 	 */
@@ -97,7 +97,7 @@ class CheckoutPage extends Page {
 /**
  * Display the checkout page, with order form. Process the order - send the order details
  * off to the Payment class.
- * 
+ *
  * @author Frank Mullenger <frankmullenger@gmail.com>
  * @copyright Copyright (c) 2011, Frank Mullenger
  * @package swipestripe
@@ -114,11 +114,11 @@ class CheckoutPage_Controller extends Page_Controller {
 
 	public function OrderForm() {
 
-		$order = Cart::get_current_order();
+		$order = Cart_Extension::get_current_order();
 		$member = Member::currentUser() ? Member::currentUser() : singleton('Member');
 
 		$form = OrderForm::create(
-			$this, 
+			$this,
 			'OrderForm'
 		)->disableSecurityToken();
 

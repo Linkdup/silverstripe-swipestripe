@@ -1,6 +1,6 @@
 <?php
 /**
- * Form for displaying on the {@link CheckoutPage} with all the necessary details 
+ * Form for displaying on the {@link CheckoutPage} with all the necessary details
  * for a visitor to complete their order and pass off to the {@link Payment} gateway class.
  */
 class OrderForm extends Form {
@@ -12,12 +12,12 @@ class OrderForm extends Form {
 		'process',
 		'update'
 	);
-	
+
 	/**
 	 * Construct the form, get the grouped fields and set the fields for this form appropriately,
-	 * the fields are passed in an associative array so that the fields can be grouped into sets 
+	 * the fields are passed in an associative array so that the fields can be grouped into sets
 	 * making it easier for the template to grab certain fields for different parts of the form.
-	 * 
+	 *
 	 * @param Controller $controller
 	 * @param String $name
 	 * @param Array $groupedFields Associative array of fields grouped into sets
@@ -33,7 +33,7 @@ class OrderForm extends Form {
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
 		Requirements::javascript('swipestripe/javascript/OrderForm.js');
 
-		$this->order = Cart::get_current_order();
+		$this->order = Cart_Extension::get_current_order();
 		$this->customer = Member::currentUser() ? Member::currentUser() : singleton('Member');
 
 		$this->fields = $this->createFields();
@@ -67,12 +67,12 @@ class OrderForm extends Form {
 		if(!$member->ID || $member->Password == '') {
 
 			$link = $this->controller->Link();
-			
+
 			$note = _t('CheckoutPage.NOTE','NOTE:');
 			$passwd = _t('CheckoutPage.PLEASE_CHOOSE_PASSWORD','Please choose a password, so you can login and check your order history in the future.');
 			$mber = sprintf(
-				_t('CheckoutPage.ALREADY_MEMBER', 'If you are already a member please %s log in. %s'), 
-				"<a href=\"Security/login?BackURL=$link\">", 
+				_t('CheckoutPage.ALREADY_MEMBER', 'If you are already a member please %s log in. %s'),
+				"<a href=\"Security/login?BackURL=$link\">",
 				'</a>'
 			);
 
@@ -89,7 +89,7 @@ class OrderForm extends Form {
 				),
 				new CompositeField(
 					new LiteralField(
-						'AccountInfo', 
+						'AccountInfo',
 						"
 						<p class=\"alert alert-info\">
 							<strong class=\"alert-heading\">$note</strong>
@@ -217,10 +217,10 @@ class OrderForm extends Form {
 	public function getPaymentFields() {
 		return $this->Fields()->fieldByName('PaymentFields');
 	}
-	
+
 	/**
 	 * Helper function to return the current {@link Order}, used in the template for this form
-	 * 
+	 *
 	 * @return Order
 	 */
 	public function Cart() {
@@ -229,7 +229,7 @@ class OrderForm extends Form {
 
 	/**
 	 * Overloaded so that form error messages are displayed.
-	 * 
+	 *
 	 * @see OrderFormValidator::php()
 	 * @see Form::validate()
 	 */
@@ -241,7 +241,7 @@ class OrderForm extends Form {
 			if($errors){
 				// Load errors into session and post back
 				$data = $this->getData();
-				Session::set("FormInfo.{$this->FormName()}.errors", $errors); 
+				Session::set("FormInfo.{$this->FormName()}.errors", $errors);
 				Session::set("FormInfo.{$this->FormName()}.data", $data);
 				$valid = false;
 			}
@@ -285,9 +285,9 @@ class OrderForm extends Form {
 			$member->addToGroupByCode('customers');
 			$member->logIn();
 		}
-		
+
 		//Save the order
-		$order = Cart::get_current_order();
+		$order = Cart_Extension::get_current_order();
 		$items = $order->Items();
 
 		$form->saveInto($order);
@@ -306,7 +306,7 @@ class OrderForm extends Form {
 			$update->write();
 		}
 
-		//Add modifiers to order
+		// Add modifiers to order
 		$order->updateModifications($data)->write();
 
 		Session::clear('Cart.OrderID');
@@ -345,16 +345,16 @@ class OrderForm extends Form {
 		if ($request->isPOST()) {
 
 			$member = Member::currentUser() ? Member::currentUser() : singleton('Member');
-			$order = Cart::get_current_order();
+			$order = Cart_Extension::get_current_order();
 
-			//Update the Order 
+			//Update the Order
 			$order->update($request->postVars());
 
 			$order->updateModifications($request->postVars())
 				->write();
 
 			$form = OrderForm::create(
-				$this->controller, 
+				$this->controller,
 				'OrderForm'
 			)->disableSecurityToken();
 
@@ -395,29 +395,29 @@ class OrderForm_Validator extends RequiredFields {
 
 		$valid = parent::php($data);
 		$fields = $this->form->Fields();
-		
+
 		//Check the order is valid
-		$currentOrder = Cart::get_current_order();
+		$currentOrder = Cart_Extension::get_current_order();
 		if (!$currentOrder) {
 			$this->form->sessionMessage(
 				_t('Form.ORDER_IS_NOT_VALID', 'Your cart seems to be empty, please add an item from the shop'),
 				'bad'
 			);
-			
+
 			//Have to set an error for Form::validate()
 			$this->errors[] = true;
 			$valid = false;
 		}
 		else {
 			$validation = $currentOrder->validateForCart();
-			
+
 			if (!$validation->valid()) {
-				
+
 				$this->form->sessionMessage(
 					_t('Form.ORDER_IS_NOT_VALID', 'There seems to be a problem with your order. ' . $validation->message()),
 					'bad'
 				);
-				
+
 				//Have to set an error for Form::validate()
 				$this->errors[] = true;
 				$valid = false;
@@ -425,10 +425,10 @@ class OrderForm_Validator extends RequiredFields {
 		}
 		return $valid;
 	}
-	
+
 	/**
 	 * Helper so that form fields can access the form and current form data
-	 * 
+	 *
 	 * @return Form
 	 */
 	public function getForm() {
@@ -447,17 +447,17 @@ class OrderForm_ItemField extends FormField {
 	 * @var String
 	 */
 	protected $template = "OrderForm_ItemField";
-	
+
 	/**
 	 * Current {@link Item} this field represents.
-	 * 
+	 *
 	 * @var Item
 	 */
 	protected $item;
-	
+
 	/**
 	 * Construct the form field and set the {@link Item} it represents.
-	 * 
+	 *
 	 * @param Item $item
 	 * @param Form $form
 	 */
@@ -467,39 +467,39 @@ class OrderForm_ItemField extends FormField {
 		$name = 'OrderItem' . $item->ID;
 		parent::__construct($name, null, '', null, $form);
 	}
-	
+
 	/**
 	 * Render the form field with the correct template.
-	 * 
+	 *
 	 * @see FormField::FieldHolder()
 	 * @return String
 	 */
 	public function FieldHolder($properties = array()) {
 		return $this->renderWith($this->template);
 	}
-	
+
 	/**
 	 * Retrieve the {@link Item} this field represents.
-	 * 
+	 *
 	 * @return Item
 	 */
 	public function Item() {
 		return $this->item;
 	}
-	
+
 	/**
 	 * Set the {@link Item} this field represents.
-	 * 
+	 *
 	 * @param Item $item
 	 */
 	public function setItem(Item $item) {
 		$this->item = $item;
 	}
-	
+
 	/**
-	 * Validate this form field, make sure the {@link Item} exists, is in the current 
+	 * Validate this form field, make sure the {@link Item} exists, is in the current
 	 * {@link Order} and the item is valid for adding to the cart.
-	 * 
+	 *
 	 * @see FormField::validate()
 	 * @return Boolean
 	 */
@@ -507,17 +507,17 @@ class OrderForm_ItemField extends FormField {
 
 		$valid = true;
 		$item = $this->Item();
-		$currentOrder = Cart::get_current_order();
+		$currentOrder = Cart_Extension::get_current_order();
 		$items = $currentOrder->Items();
-		
+
 		//Check that item exists and is in the current order
 		if (!$item || !$item->exists() || !$items->find('ID', $item->ID)) {
-			
+
 			$errorMessage = _t('Form.ITEM_IS_NOT_IN_ORDER', 'This product is not in the Order.');
 			if ($msg = $this->getCustomValidationMessage()) {
 				$errorMessage = $msg;
 			}
-			
+
 			$validator->validationError(
 				$this->getName(),
 				$errorMessage,
@@ -526,16 +526,16 @@ class OrderForm_ItemField extends FormField {
 			$valid = false;
 		}
 		else if ($item) {
-			
+
 			$validation = $item->validateForCart();
-			
+
 			if (!$validation->valid()) {
-				
+
 				$errorMessage = $validation->message();
 				if ($msg = $this->getCustomValidationMessage()) {
 					$errorMessage = $msg;
 				}
-				
+
 				$validator->validationError(
 					$this->getName(),
 					$errorMessage,
@@ -544,7 +544,7 @@ class OrderForm_ItemField extends FormField {
 				$valid = false;
 			}
 		}
-		
+
 		return $valid;
 	}
 }

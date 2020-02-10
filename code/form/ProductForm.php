@@ -174,7 +174,7 @@ class ProductForm extends Form {
 	 */
 	public function add(Array $data, Form $form) {
 
-		Cart::get_current_order(true)
+		Cart_Extension::get_current_order(true)
 			->addItem(
 				$this->getProduct(), 
 				$this->getVariation(), 
